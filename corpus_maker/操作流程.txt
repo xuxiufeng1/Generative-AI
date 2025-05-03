@@ -1,0 +1,15 @@
+# 构建 Docker 镜像并推送到 Artifact Registry
+gcloud builds submit --tag gcr.io/baidao-training-2023/xu-zuoyebang-corpus-maker
+
+
+# 部署到 Cloud Run
+gcloud run deploy xu-zuoyebang-corpus-maker \
+  --image gcr.io/baidao-training-2023/xu-zuoyebang-corpus-maker \
+  --platform managed \
+  --region us-central1 \
+  --allow-unauthenticated \
+  --set-env-vars GCP_PROJECT_ID=baidao-training-2023,GCP_LOCATION=us-central1,DELETE_EXISTING_CORPORA="true"
+
+
+# 发送POST请求（删除旧corpus、创建corpus、导入PDF）
+https://xu-zuoyebang-corpus-maker-460673118386.us-central1.run.app/create_and_import
