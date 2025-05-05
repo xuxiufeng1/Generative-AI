@@ -1,1 +1,33 @@
 # Generative-AI Demo1
+
+部署方式：
+
+# 构建 Docker 镜像并推送到 Artifact Registry
+gcloud builds submit --tag gcr.io/baidao-training-2023/xu-zuoyebang-corpus-maker
+
+# 部署到 Cloud Run
+gcloud run deploy xu-zuoyebang-corpus-maker \
+  --image gcr.io/baidao-training-2023/xu-zuoyebang-corpus-maker \
+  --platform managed \
+  --region us-central1 \
+  --allow-unauthenticated \
+  --set-env-vars GCP_PROJECT_ID=baidao-training-2023,GCP_LOCATION=us-central1,DELETE_EXISTING_CORPORA="true"
+
+# 发送POST请求（删除旧corpus、创建corpus、导入PDF）
+https://xu-zuoyebang-corpus-maker-460673118386.us-central1.run.app/create_and_import
+
+#############
+
+# 构建 Docker 镜像并推送到 Artifact Registry
+gcloud builds submit --tag gcr.io/baidao-training-2023/xu-zuoyebang-vector-search
+
+# 部署到 Cloud Run（这里的 ragCorpora Name，要和 1. xu-zuoyebang-corpus-maker 生成的保持一致）
+gcloud run deploy xu-zuoyebang-vector-search \
+  --image gcr.io/baidao-training-2023/xu-zuoyebang-vector-search \
+  --platform managed \
+  --region us-central1 \
+  --allow-unauthenticated \
+  --set-env-vars GCP_PROJECT_ID=baidao-training-2023,GCP_LOCATION=us-central1,CORPUS_NAME="projects/baidao-training-2023/locations/us-central1/ragCorpora/7991637538768945152",GENERATIVE_MODEL_NAME="gemini-2.5-pro-preview-03-25",RETRIEVAL_TOP_K="6",RETRIEVAL_DISTANCE_THRESHOLD="0.5"
+
+# 发送GET请求
+https://xu-zuoyebang-vector-search-460673118386.us-central1.run.app?query=
