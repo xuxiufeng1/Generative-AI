@@ -49,6 +49,7 @@ def create_and_import_corpus():
         logger.info("Listing existing corpora...")
         existed_corporas = rag.list_corpora()
 
+        # 生产环境禁止删除语料库，仅做语料库切换
         if DELETE_EXISTING_CORPORA:
             logger.warning("DELETE_EXISTING_CORPORA is True. Attempting to delete all existing corpora.")
             for corpus in existed_corporas:
